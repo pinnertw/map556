@@ -1,0 +1,85 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
+
+% Pour avoir les accents
+\usepackage[utf8]{inputenc}  
+\usepackage[T1]{fontenc}   
+\usepackage{bbm}
+
+% Some macros for your convenience
+\newcommand\bbR{\ensuremath{\mathbb{R}}} % Real numbers
+\newcommand\bbZ{\ensuremath{\mathbb{Z}}} % Integers
+\newcommand\bbE{\ensuremath{\mathbb{E}}} % Expectation
+\DeclareMathOperator*{\tr}{tr} % Trace
+\DeclareMathOperator*{\diag}{diag} % Diagonal matrix
+\DeclareMathOperator*{\sign}{sign} % Sign
+\DeclareMathOperator*{\var}{Var} % Variance
+\DeclareMathOperator*{\cov}{Cov} % Covariance
+\DeclareMathOperator*{\argmin}{Argmin} % \argmin
+\DeclareMathOperator*{\argmax}{Argmax} % \argmax
+
+\newcommand{\1}{\mathbb{I}} % Indicator
+%\newcommand{\newproblem}[1]{\newpage \section*{Problem #1}}
+
+\begin{document}
+
+\begin{center}
+{\Large MAP556 PC1 Exercice 1}
+
+\begin{tabular}{c}
+Peng-Wei Chen
+\end{tabular}
+\end{center}
+\section*{Question 1}
+On identifie la densité de X comme $\lambda e^{-\lambda x} \mathbbm{1}_{x\ge 0}$. On montre qu'on peut appliquer la méthode de vraisemblance à cette question :
+\begin{enumerate}
+    \item La densité de $X_\lambda$ est strictement positive sur $[0, +\infty[$ par rapport à la mesure $\mu (dx) = dx$.
+            \item La fonction $(\lambda, x)\in ]0, +\infty[ \times \mathbb{R} \mapsto p(\lambda, x) = \lambda e^{-\lambda x} \mathbbm{1}_{x\ge 0}$ est continûment différentiable par rapport à $\lambda$ avec $|\partial_{\lambda} p(\lambda, x)| = |(1 - \lambda x)e^{-\lambda x}|$. On peut trouver une majoration intégrable de $|\partial_{\lambda} p(\lambda, x)|$ sur un voisinage de $\lambda$ parce que c'est une fonction affine en x multipliée par $e^{-\lambda x}$.
+    \item Par la définition de F, F est measurable et bornée.
+\end{enumerate}
+Ainsi, on a
+\begin{equation*}
+    \begin{array}[h]{r l}
+f'(\lambda) & = \partial_\lambda \mathbb{E}\left[F(X)\right] = \mathbb{E}\left[ F(X)\partial_\lambda\left[log(p(\lambda, x)\right]|_{x = X}\right]\\
+    &   = \int_0^{+\infty} F(x)\left( \frac{1}{\lambda} - x\right) \lambda e^{-\lambda x} dx\\
+        
+    \end{array}
+\end{equation*}
+\section*{Question 2}
+On peut écrire $X = -\frac{1}{\lambda} log(U)$ où U est une loi uniforme sur $[0, 1]$. Alors, 
+\[
+    \partial_\lambda X = \frac{1}{\lambda^2}log(U) = -\frac{1}{\lambda}X
+\]
+On montre qu'on peut appliquer la méthode de dérivation à cette question :
+\begin{enumerate}
+    \item La fonction $\lambda \mapsto -\frac{1}{\lambda} log(U)$ est $C^1$ p.s. Et $\partial_\lambda X < -\frac{4}{\lambda^2} log(U)$ sur le voisinage $]\frac{\lambda}{2}, 2\lambda[$ de $\lambda$. La majoration est intégrable sur ce voisinage aussi.
+    \item F est une fonction $C^{1}$ à dérivée bornée. (La question ne donne que $D^{1}$, mais cela n'est pas suffisant)
+\end{enumerate}
+Ainsi, on a
+\begin{equation*}
+    \begin{array}[h]{r l}
+    f'(\lambda) & = \partial_\lambda \mathbb{E}\left[F(X)\right] = \mathbb{E}\left( \triangledown F(X)\partial_\lambda X \right)\\
+    &   =\mathbb{E}\left( -F'(X)\frac{X}{\lambda} \right)\\
+    &   = \int_0^{+\infty} -F'(x)\frac{x}{\lambda}\lambda e^{-\lambda x} dx\\
+    &   = \int_0^{+\infty} -F'(x)xe^{-\lambda x} dx\\
+    \end{array}
+\end{equation*}
+
+\section*{Question 3}
+On va utiliser l'intégration par parties sur le résultat de la question 1. On prend $f(x) = F(x)$, $g_\lambda'(x) = \left( \frac{1}{\lambda} - x \right) \lambda e^{-\lambda x} dx$. Ainsi, on a 
+\[
+    g_\lambda (x) = xe^{-\lambda x}
+\]
+et donc
+\begin{equation*}
+    \begin{array}[h]{l}
+    \int_0^{+\infty} F(x)\left( \frac{1}{\lambda} - x\right) \lambda e^{-\lambda x} dx\\
+    = \left[ F(x)xe^{-\lambda x} \right]^{+\infty}_{0} - \int_0^{+\infty} F'(x) xe^{-\lambda x} dx\\
+    = -\int_0^{+\infty} F'(x)xe^{-\lambda x} dx
+        
+    \end{array}
+    \label{non}
+\end{equation*}
+où on retrouve le résultat de la question 2.
+
+\end{document}
