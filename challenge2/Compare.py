@@ -31,13 +31,13 @@ for dir_ in dir_list:
 order = np.sort(act)
 for value in act:
     if value == order[0]:
-        print(color_list[0] + "%2.1f" %value, end="\033[0m\t")
+        print(color_list[0] + "%2.1f" %value, end="\033[0m\t\t")
     elif value == order[1]:
-        print(color_list[1] + "%2.1f" %value, end="\033[0m\t")
+        print(color_list[1] + "%2.1f" %value, end="\033[0m\t\t")
     elif value == order[2]:
-        print(color_list[2] + "%2.1f" %value, end="\033[0m\t")
+        print(color_list[2] + "%2.1f" %value, end="\033[0m\t\t")
     elif value == order[-1]:
-        print(color_list[3] + "%2.1f" %value, end="\033[0m\t")
+        print(color_list[3] + "%2.1f" %value, end="\033[0m\t\t")
     else:
         print("%2.1f" %value, end="\t")
 

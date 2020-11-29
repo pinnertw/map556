@@ -1,42 +1,27 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import numpy as np
+'''
 import tensorflow as tf
-
-meanx = np.load("meanx.npy")
-meany = np.load("meany.npy")
-stdx = np.load("stdx.npy")
-stdy = np.load("stdy.npy")
-coeff = 0.0249
-
-def exemple_model(seconde, position):
-    i = seconde
-    if i == 0:
-        return np.array([0., 0.])
-    else:
-        force = np.array([-(position[0] - meanx[i-1]) * coeff * stdx[i-1], 
-                          -(position[1] - meany[i-1]) * coeff * stdy[i-1]])
-        return force
-
-
+class Actor(tf.keras.Model):
+    def __init__(self, no_action):
+        super(Actor, self).__init__()
+        self.f1 = tf.keras.layers.Dense(40, activation='relu')
+        self.f2 = tf.keras.layers.Dense(40, activation='relu')
+        self.mu =  tf.keras.layers.Dense(no_action, activation=None)
+    def call(self, state):
+        x = self.f1(state)
+        x = self.f2(x)
+        x = self.mu(x)
+        return x
+a = Actor(2)
+a.load_weights("td3_actor_55000")
 def main(seconde, position):
-    """
-    Votre controle du AG 2.0 au temps t seconde(s) et à la position X_t
-
-    Parameters
-    ----------
-    seconde: float
-        s = 0., 1., .., 9.
-    position: arr (2,)
-        Position du AG de format (2,) avec coordonnée x = position [0] et coordonnée y = position [1]
-
-    Returns
-    -------
-    arr (2,)
-        Contrôle du AG durant la prochaine seconde.
-
-    Notes
-    ----
-    La sortie de cette fontion doit être la valeur de votre contrôle :
-        un array (de float32 ou float64) et de dimension (2,)
-
-    """
-    return exemple_model(seconde, position)
+    seconde/=10
+    position/=np.array([100., 50.])
+    force = a(tf.convert_to_tensor([[seconde, position[0], position[1]]], dtype=tf.float32)).numpy()[0]
+    print(seconde, position, force)
+    return force
+'''
+def main(seconde, position):
+        return np.array([-(position[0]-10.*seconde),-(position[1]-(20.*seconde-2*seconde** 2))])

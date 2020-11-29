@@ -59,7 +59,6 @@ class AngryBird():
     def step(self, action):
         i = int(self.X[0])
         if i == 10:
-            self.X[0] += 1
             return self.X, self.cost[10], True, None
         for j in range(10):
             self.X[1:] = self.dynamique_pos(action)

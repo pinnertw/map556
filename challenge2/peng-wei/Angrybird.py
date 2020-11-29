@@ -24,9 +24,28 @@ class AngryBird():
         self.X = np.array([0, 0., 0.])
         self.vent = self.init_vent()
         self.discrete_t = 0
-        self.cost = 0.
+        self.cost = np.zeros(11)
         self.trajectoire = [np.copy(self.X)]
         return self.X
+
+    def reset_s(self, i, bool_reset_vent=True):
+        if i == 0:
+            self.reset()
+        else:
+            self.X = np.copy(self.trajectoire[10 * i])
+            self.discrete_t = i * 10
+            last_cost = self.cost[:i]
+            self.cost = np.zeros(11)
+            self.cost[:i] = last_cost
+            self.trajectoire = self.trajectoire[:10*i + 1]
+            if bool_reset_vent:
+                self.reset_vent(i)
+            return self.X
+
+    def reset_vent(self, i):
+        X = np.random.multivariate_normal(mean=np.zeros(shape=2), cov=self.cov, size=(10 - i) * 10)
+        for j in range(i * 10, 100):
+            self.vent[j] = X[j-10*i] + np.matmul(self.coeff, self.vent[j-1])
     
     def dynamique_pos(self, controle):
         t = self.discrete_t / 10
@@ -39,24 +58,35 @@ class AngryBird():
     
     def step(self, action):
         i = int(self.X[0])
-        done = False
-
+        if i == 10:
+            self.X[0] += 1
+            return self.X, self.cost[10], True, None
         for j in range(10):
             self.X[1:] = self.dynamique_pos(action)
             self.trajectoire.append(np.copy(self.X))
             self.discrete_t += 1
+        self.trajectoire[-1][0] += 1
         
         self.X[0] += 1
-        local_cost = np.linalg.norm(action) ** 2
-        self.cost += local_cost
+        self.cost[i] = np.linalg.norm(action) ** 2
         if i == 9:
-            #local_cost += self.normL()
-            self.cost += self.normL()
-            done = True
-            return self.X, self.cost, done, None
-        return self.X, 0, done, None
+            self.cost[10] = self.g_func()
+        return self.X, self.cost[i], False, None
+        #return self.X, 0., done, None
 
-    def normL(self):
+    def g_func(self):
         u1 = ((self.X[1] - 100) - self.X[2]) / np.sqrt(2)
         u2 = ((self.X[1] - 100) + self.X[2]) / np.sqrt(2)
         return (u1 + u1 * (u1>0)) ** 2 + u2 ** 2
+
+    def g_prime(self):
+        x1 = self.X[1]
+        x2 = self.X[2]
+        dx1 = x1 - 100. - x2
+        dx2 = x2 + 100. - x1
+
+        dx1_ = x1 + x2 - 100.
+        if x1 - 100. - x2 > 0:
+            dx1 *= 4
+            dx2 *= 4
+        return np.array([dx1 + dx1_, dx2 + dx1_])
