@@ -1,7 +1,7 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import numpy as np
-'''
+
 import tensorflow as tf
 class Actor(tf.keras.Model):
     def __init__(self, no_action):
@@ -15,13 +15,14 @@ class Actor(tf.keras.Model):
         x = self.mu(x)
         return x
 a = Actor(2)
-a.load_weights("td3_actor_55000")
+a.load_weights("td3_actor_60")
+a(tf.convert_to_tensor([[0., 0., 0.]]))
 def main(seconde, position):
-    seconde/=10
-    position/=np.array([100., 50.])
-    force = a(tf.convert_to_tensor([[seconde, position[0], position[1]]], dtype=tf.float32)).numpy()[0]
-    print(seconde, position, force)
+    force=np.array([-(position[0]-10.*seconde),-(position[1]-(20.*seconde-2*seconde** 2))]) 
+    force+=a(tf.convert_to_tensor([[seconde/10, position[0]/100, position[1]/50]], dtype=tf.float32)).numpy()[0]
+    #print(force)
     return force
 '''
 def main(seconde, position):
         return np.array([-(position[0]-10.*seconde),-(position[1]-(20.*seconde-2*seconde** 2))])
+'''
