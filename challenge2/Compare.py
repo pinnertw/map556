@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 import numpy as np
-dir_list = ["Tristan", "Ancel", "Noble", "Mirone", "Ming", "Miras", "Peng-Wei", "Delaunay", "Plazen2"]
-dir_list = ["peng-wei", "peng-wei_baseline"]
+dir_list = ["peng-wei", "peng-wei_base", "tristan"]
 
 color_list = ["\033[92m", "\033[93m", "\033[94m", "\033[91m", "\033[0m"]
 
