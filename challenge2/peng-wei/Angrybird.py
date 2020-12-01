@@ -26,6 +26,8 @@ class AngryBird():
         self.discrete_t = 0
         self.cost = np.zeros(11)
         self.trajectoire = [np.copy(self.X)]
+        self.X_bar = np.array([0., 0.])
+        self.cross_product = np.zeros(2)
         return self.X
 
     def reset_s(self, i, bool_reset_vent=True):
@@ -56,7 +58,8 @@ class AngryBird():
         term5 = controle * self.Delta_T
         return self.X[1:] + term1 + term2 - term3 + term4 + term5
     
-    def step(self, action):
+    def step(self, action, v_action=np.zeros(2)):
+        self.cross_product += action * v_action * 4
         i = int(self.X[0])
         if i == 10:
             self.X[0] += 1
@@ -64,6 +67,7 @@ class AngryBird():
         for j in range(10):
             self.X[1:] = self.dynamique_pos(action)
             self.trajectoire.append(np.copy(self.X))
+            self.X_bar = (1 - self.lamb * self.Delta_T) * self.X_bar + v_action * self.Delta_T
             self.discrete_t += 1
         self.trajectoire[-1][0] += 1
         
@@ -73,6 +77,9 @@ class AngryBird():
             self.cost[10] = self.g_func()
         return self.X, self.cost[i], False, None
         #return self.X, 0., done, None
+
+    def j_prime_MC(self):
+        return np.sum(self.cross_product + self.g_prime() * self.X_bar)
 
     def g_func(self):
         u1 = ((self.X[1] - 100) - self.X[2]) / np.sqrt(2)

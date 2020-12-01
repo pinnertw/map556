@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 import numpy as np
-dir_list = ["peng-wei", "peng-wei_base", "tristan"]
+dir_list = ["base", "tristan", "maxence", "peng-wei"]
 
 color_list = ["\033[92m", "\033[93m", "\033[94m", "\033[91m", "\033[0m"]
 
@@ -30,13 +30,13 @@ for dir_ in dir_list:
 order = np.sort(act)
 for value in act:
     if value == order[0]:
-        print(color_list[0] + "%2.1f" %value, end="\033[0m\t\t")
+        print(color_list[0] + "%2.1f" %value, end="\033[0m\t")
     elif value == order[1]:
-        print(color_list[1] + "%2.1f" %value, end="\033[0m\t\t")
+        print(color_list[1] + "%2.1f" %value, end="\033[0m\t")
     elif value == order[2]:
-        print(color_list[2] + "%2.1f" %value, end="\033[0m\t\t")
+        print(color_list[2] + "%2.1f" %value, end="\033[0m\t")
     elif value == order[-1]:
-        print(color_list[3] + "%2.1f" %value, end="\033[0m\t\t")
+        print(color_list[3] + "%2.1f" %value, end="\033[0m\t")
     else:
         print("%2.1f" %value, end="\t")
 
@@ -45,4 +45,4 @@ print()
 print("Rank", end="\t")
 for value in act:
     index = np.where(order == value)[0][0]
-    print(index + 1, end="\t\t")
+    print(index + 1, end="\t")
