@@ -2,7 +2,7 @@ import numpy as np
 from scipy.linalg import expm
 
 class AngryBird():    
-    def __init__(self):    
+    def __init__(self):
         self.d = np.array([100, 0])
         self.g = np.array([0, -4])
         self.V0 = np.array([10., 20.])
@@ -20,14 +20,15 @@ class AngryBird():
             vent[i] = X[i-1] + np.matmul(self.coeff, vent[i-1])
         return vent
 
-    def reset(self):    
+    def reset(self, bool_reset_vent=True):
         self.X = np.array([0, 0., 0.])
-        self.vent = self.init_vent()
         self.discrete_t = 0
         self.cost = np.zeros(11)
         self.trajectoire = [np.copy(self.X)]
         self.X_bar = np.array([0., 0.])
         self.cross_product = np.zeros(2)
+        if bool_reset_vent:
+            self.vent = self.init_vent()
         return self.X
 
     def reset_s(self, i, bool_reset_vent=True):
@@ -59,7 +60,7 @@ class AngryBird():
         return self.X[1:] + term1 + term2 - term3 + term4 + term5
     
     def step(self, action, v_action=np.zeros(2)):
-        self.cross_product += action * v_action * 4
+        self.cross_product += action * v_action * 2
         i = int(self.X[0])
         if i == 10:
             self.X[0] += 1
