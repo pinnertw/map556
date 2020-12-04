@@ -1,19 +1,16 @@
 import numpy as np
-coeffs = np.load("cc.npy")
-coeffs2 = np.load("cc2.npy")
-mean_states = np.load("mean_states.npy")
-cor = np.array([[0, 0, 0],
-               [0, 3, 2],
-               [0, 1, 0]])
+coeffs = np.load("l.npy")                    #coeffs : the coefficients for all the members in the equation
+mean_states = np.load("mean_states.npy")     #mean_states : the average position at t=0 to t=9
+quantiles = np.load("quantiles.npy")         #the quantiles for the axes after being rotated from y=-x+h(t) to axe x
 seconds = np.arange(11)
-pos = np.zeros((11, 2))
+pos = np.zeros((11, 2))                      #pos : the position where the birds should be at different t.
 pos[:, 0] = seconds * 10
 pos[:, 1] = seconds * 20 - 2 * seconds**2
+sqr2 = 1/np.sqrt(2)
+rot = np.array([[sqr2, -sqr2],
+               [sqr2, sqr2]])                #rot : the rotation matrix to rotate 45 degrees counter-clockwise
 def main(seconde, position):
     t = int(seconde)
-    a, b =np.sign(position - mean_states[t]).astype(int)
-    i = cor[a][b]
-    if t < 9:
-        return coeffs[t, i, :2]*pos[t]-coeffs[t, i, 2:4]*position + coeffs[t, i, 4:]
-    else:
-        return coeffs[t, i, :2]*pos[t]-coeffs[t, i, 2:4]*position + coeffs[t, i, 4:] + coeffs2*position**2*(i < 0.5)
+    a, _ = rot.dot(position - mean_states[t])
+    i = np.searchsorted(quantiles[:, t],a, side="left")
+    return coeffs[t, i, :2]*pos[t]-coeffs[t, i, 2:4]*position + coeffs[t, i, 4:]
