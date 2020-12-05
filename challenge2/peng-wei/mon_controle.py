@@ -1,7 +1,7 @@
 import numpy as np
-coeffs = np.load("l.npy")                    #coeffs : the coefficients for all the members in the equation
-mean_states = np.load("mean_states.npy")     #mean_states : the average position at t=0 to t=9
-quantiles = np.load("quantiles.npy")         #the quantiles for the axes after being rotated from y=-x+h(t) to axe x
+coeffs = np.load("c_720.npy")                    #coeffs : the coefficients for all the members in the equation
+mean_states = np.load("mean_states_720.npy")     #mean_states : the average position at t=0 to t=9
+quantiles = np.load("quantiles_720.npy")         #the quantiles for the axes after being rotated from y=-x+h(t) to axe x
 seconds = np.arange(11)
 pos = np.zeros((11, 2))                      #pos : the position where the birds should be at different t.
 pos[:, 0] = seconds * 10
